@@ -20,6 +20,7 @@ export default function Form(props) {
   const handleSubmit = function(event) {
     event.preventDefault();
     props.onSave(name, interviewer);
+    reset(); // Should I reset it?
   }
   
   return (
