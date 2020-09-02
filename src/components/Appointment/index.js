@@ -9,7 +9,7 @@ import "components/Appointment/styles.scss"
 
 
 export default function Appointment(props) {
-  const { interview} = props;
+  const { interview } = props;
   const isInterview = (props.interview) ? <Show student={interview.student} interviewer={interview.interviewer} /> : <Empty />;
 
   return(
