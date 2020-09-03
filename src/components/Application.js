@@ -4,7 +4,7 @@ import axios from 'axios';
 import "components/Application.scss";
 import DayList from "components/DayList";
 import Appointment from "components/Appointment/index"
-import { getAppointmentsForDay, getInterview } from "helpers/selectors";
+import { getAppointmentsForDay, getInterview, getInterviewersForDay } from "helpers/selectors";
 
 
 
@@ -25,20 +25,64 @@ export default function Application(props) {
       axios.get('/api/interviewers')])
       .then( all => setState( prevState => ({ ...prevState, days: all[0].data, appointments: all[1].data, interviewers: all[2].data})
       ))
-    })
+    }, [])
+
+
+  const bookInterview = (id, interview) => {
+    const appointment = {
+      ...state.appointments[id],
+      interview: { ...interview }
+    };
     
-    const appointments = getAppointmentsForDay(state, state.day);
-    const apptComponents = appointments.map( appt => {
-      const interview = getInterview(state, appt.interview)
-      
-      return (
-        <Appointment 
-          key={appt.id}
-          id={appt.id}
-          time={appt.time}
-          interview={interview}          
-        />) 
-    });
+    const appointments = {
+      ...state.appointments,
+      [id]: appointment
+    }
+
+    return axios(
+      {
+        method: 'PUT',
+        url: `/api/appointments/${id}`,
+        data: {interview}
+      })
+    .then( () => {
+      setState({...state, appointments})
+    })
+  };
+
+
+  const cancelInterview = (id) => {
+    
+    const appointment = {
+      ...state.appointments[id],
+      interview: null
+    }
+    const appointments = {
+      ...state.appointments,
+      [id]: appointment
+    }
+
+    return axios.delete(`/api/appointments/${id}`)
+    .then( () =>  setState( {...state, appointments} ))
+
+  }
+
+  const appointmentsForDay = getAppointmentsForDay(state, state.day);
+  const interviewers = getInterviewersForDay(state,state.day);
+  
+  const apptComponents = appointmentsForDay.map( appt => {
+    const interview = getInterview(state, appt.interview)
+    return (
+      <Appointment 
+        key={appt.id}
+        id={appt.id}
+        time={appt.time}
+        interview={interview}
+        interviewers={interviewers} 
+        bookInterview={bookInterview}  
+        cancelInterview={cancelInterview}       
+      />) 
+  });
 
 
   return (
