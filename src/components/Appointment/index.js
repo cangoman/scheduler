@@ -14,6 +14,7 @@ import "components/Appointment/styles.scss"
 const EMPTY     = "EMPTY";
 const SHOW      = "SHOW";
 const CREATE    = "CREATE";
+const EDIT      = "EDIT";
 const SAVING    = "SAVING";
 const DELETING  = "DELETING";
 const CONFIRM   = "CONFIRM";
@@ -47,6 +48,7 @@ export default function Appointment(props) {
           student={props.interview.student}
           interviewer={props.interview.interviewer}
           onDelete={ () => transition(CONFIRM) }
+          onEdit={() => transition(EDIT)}
         />
         )
       }
@@ -55,24 +57,42 @@ export default function Appointment(props) {
           interviewers={props.interviewers} 
           onCancel={back}
           onSave={save}
-        />)}
+        />
+        )
+      }
+      {mode === EDIT && 
+        (<Form 
+          interviewers={props.interviewers}
+          name={props.interview.student}
+          interviewer={props.interview.interviewer.id} 
+          onCancel={back}
+          onSave={save}
+        />
+        )
+      }
+        
       {mode === SAVING && 
-      (<Status 
-        message="Saving" 
-      />
-      )}
+        (<Status 
+          message="Saving" 
+        />
+        )
+      }
       {mode === DELETING && 
-      (<Status 
-        message="Deleting" 
-      />
-      )}
+        (
+        <Status 
+          message="Deleting" 
+        />
+        )
+      }
       {mode === CONFIRM && 
-      (<Confirm 
-        message="Are you sure you would like to delete?" 
-        onConfirm={deleteAppointment}
-        onCancel={back}
-      />
-      )}
+        (
+        <Confirm 
+          message="Are you sure you would like to delete?" 
+          onConfirm={deleteAppointment}
+          onCancel={back}
+        />
+        )
+      }
 
 
     </article>
