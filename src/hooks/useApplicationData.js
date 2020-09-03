@@ -31,7 +31,12 @@ export default function useApplicationData() {
         ...state.appointments,
         [id]: appointment
       }
-  
+
+      const days = state.days.map( day => {
+        return day.appointments.includes(id) ? {...day, spots: day.spots-1} : day; 
+      });
+
+
       return axios(
         {
           method: 'PUT',
@@ -39,7 +44,7 @@ export default function useApplicationData() {
           data: {interview}
         })
       .then( () => {
-        setState({...state, appointments})
+        setState({...state, appointments, days})
       })
     };
 
@@ -56,11 +61,14 @@ export default function useApplicationData() {
       [id]: appointment
     }
 
+    const days = state.days.map( day => {
+      return day.appointments.includes(id) ? {...day, spots: day.spots+1} : day; 
+    });
+
     return axios.delete(`/api/appointments/${id}`)
-    .then( () =>  setState( {...state, appointments} ))
+    .then( () =>  setState( {...state, appointments, days} ))
 
   }
-
 
   return {
     state,

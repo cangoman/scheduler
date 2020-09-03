@@ -34,7 +34,6 @@ export default function Application(props) {
         cancelInterview={cancelInterview}       
       />) 
   });
-  console.log(state.days)
 
   return (
     <main className="layout">
