@@ -76,10 +76,6 @@ export default function useApplicationData() {
 
 
   useEffect( () => {
-    webSocket.onopen = (event) => {
-      webSocket.send('ping');
-    }
-
     webSocket.onmessage = (event) => {
       const message = JSON.parse(event.data);
       dispatch({...message})
@@ -88,17 +84,10 @@ export default function useApplicationData() {
 
 
   const bookInterview = (id, interview) => {
-
-    return axios(
-      {
-        method: 'PUT',
-        url: `/api/appointments/${id}`,
-        data: {interview}
-      })
+    return axios.put(`/api/appointments/${id}`, {interview})
   };
 
   const cancelInterview = (id) => {
-
     return axios.delete(`/api/appointments/${id}`)
   };
 
