@@ -183,7 +183,7 @@ describe("Application", () => {
 
     await expect(getByText(appointment, "Deleting")).toBeInTheDocument();
 
-      //This won't work because of the webSocket
+    //This won't work because of the webSocket
     //waitForElement(getByText(appointment, "Could not delete appointment"));
     // expect(getByText(appointment, "Could not save appointment")).toBeInTheDocument();
 
